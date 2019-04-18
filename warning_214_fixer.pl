@@ -20,11 +20,11 @@ my $warnings_temp = "warning_214_fixer.txt";
 # Execute the compiler in a child process, redirecting stdout to trash and stderr to a temporary file
 my $devnull = File::Spec->devnull();
 if(system "pawncc $ARGV[0] -o$amx_temp > $devnull 2> $warnings_temp") {
-	die "ERROR: Problem trying to execute the pawn compiler.\n";
+	printerror("ERROR: Problem trying to execute the pawn compiler.\n");
 }
 
 # Extract the line number and the string name from all lines containing 'warning 214' from the temporary stderr file
-open INPUT, $warnings_temp or die "ERROR: Can't open temporary file '$warnings_temp': $!.\n";
+open INPUT, $warnings_temp or printerror("ERROR: Can't open temporary file '$warnings_temp': $!.\n");
 my %warnings;
 my $amount = 0;
 while(<INPUT>) {
@@ -37,8 +37,8 @@ while(<INPUT>) {
 close INPUT;
 
 # Add 'const' in front of every string that needs it
-open INPUT, $ARGV[0] or die "ERROR: Can't open source file '$ARGV[0]': $!.\n";
-open OUTPUT, ">$ARGV[1]" or die "ERROR: Can't open destination file '$ARGV[1]': $!.\n";
+open INPUT, $ARGV[0] or printerror("ERROR: Can't open source file '$ARGV[0]': $!.\n");
+open OUTPUT, ">$ARGV[1]" or printerror("ERROR: Can't open destination file '$ARGV[1]': $!.\n");
 foreach my $ln (sort {$a <=> $b} keys %warnings) {
 	# The line numbers are sorted in ascending order, so we only need to go over the source file once
 	while(<INPUT>) {
@@ -64,8 +64,19 @@ close INPUT;
 close OUTPUT;
 
 # Remove temporary files
-unlink $amx_temp;
-unlink $warnings_temp;
+cleanup();
 
 # Write message
 print "SUCCESS: Fixed warning 214 a total of $amount times.\n";
+
+# Subroutine to cleanup the temporary files and print the error message
+sub printerror {
+	cleanup();
+	die $_[0];
+}
+
+# Subroutine to cleanup the temporary files
+sub cleanup {
+	unlink $amx_temp;
+	unlink $warnings_temp;
+}
