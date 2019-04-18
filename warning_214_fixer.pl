@@ -10,7 +10,7 @@ if(@ARGV < 2) {
 
 # Check if the source file and the destination file are equal
 if($ARGV[0] eq $ARGV[1]) {
-	die "ERROR: The source file can not be the same as the destination file, to prevent losing the original.\n"
+	die "ERROR: Source and destination can't be the same to prevent losing the original script.\n";
 }
 
 # Declare temporary files
