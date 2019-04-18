@@ -19,7 +19,7 @@ my $warnings_temp = "warning_214_fixer.txt";
 
 # Execute the compiler in a child process, redirecting stdout to trash and stderr to a temporary file
 my $devnull = File::Spec->devnull();
-if(system "pawncc $ARGV[0] -o$amx_temp > $devnull 2> $warnings_temp") {
+if(system "pawncc $ARGV[0] -o$amx_temp -iinclude > $devnull 2> $warnings_temp") {
 	printerror("ERROR: Problem trying to execute the pawn compiler.\n");
 }
 
