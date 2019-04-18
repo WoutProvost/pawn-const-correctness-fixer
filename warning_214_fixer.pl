@@ -66,4 +66,4 @@ unlink $amx_temp;
 unlink $warnings_temp;
 
 # Write message
-print "Fixed warning 214 a total of $amount times.";
+print "Fixed warning 214 a total of $amount times.\n";
